@@ -1,4 +1,5 @@
 const http = require("http");
+const fs = require("fs");
 
 /**
  Todo Complete this app to serve the content inside `static` folder
@@ -10,8 +11,16 @@ const http = require("http");
  -- Hint, it possible to read a file using `readFileSync` of fs module and serve it to the client
  */
 
-const server = http.createServer((req, res) => {
-  //
-});
+const INDEX_URL = "./src/static/html/index.html";
 
+const server = http.createServer((req, res) => {
+  console.log(`running...`);
+  let url;
+  req.url === "/" ? (url = INDEX_URL) : (url = `./src/static/html${req.url}`);
+  fs.readFile(url, undefined, (err, data) => {
+    if (err) {
+      res.end("<p>Error 404 - Page not Found</p>");
+    } else res.end(data);
+  });
+});
 server.listen(3000);
